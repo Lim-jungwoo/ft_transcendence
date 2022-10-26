@@ -1,0 +1,54 @@
+version: '3'
+
+services:
+  dev-db:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - 5432:5432
+    # environment:
+    #   POSTGRES_USER: postgres
+    #   POSTGRES_PASSWORD: 123
+    #   POSTGRES_DB: nest
+    env_file:
+      - .env
+    networks:
+      - backend
+    # volumes:
+    #   - postregresdb:/u
+    #   - postgres:/var/lib/postgresql/data
+
+  # dev-nestjs:
+  #   build: .
+  #   container_name: nestjs
+  #   ports:
+  #     - 4000:4000
+  #   networks:
+  #     - backend
+  #   depends_on:
+  #     - dev-db
+  #     - prisma-studio
+  #   env_file:
+  #     - .env
+  # volumes:
+  #   - nestjs:/app
+  # - /app/node_modules
+  # - /app/prisma
+
+  # prisma-studio:
+  #   container_name: prisma-studio
+  #   # build: ./prisma
+  #   image: timothyjmiller/prisma-studio:latest
+  #   links:
+  #     - dev-db
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - 5555:5555
+
+networks:
+  backend:
+
+volumes:
+  nestjs:
+  postregresdb:
