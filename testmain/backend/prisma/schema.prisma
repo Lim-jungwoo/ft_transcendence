@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator nestjsDto {
+  provider = "prisma-generator-nestjs-dto"
+  output = "../src"
+  outputToNestJsResourceStructure = "true"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id //pk
+  email String @unique
+  username String @unique
+  nickname String @unique
+  avatar  String?
+
+  tfa Boolean @default(false)
+  tfacode String?
+  tfatime DateTime?
+
+  lasttokentime DateTime?
+  rtoken String?
+
+  historys History[]
+  status String @default("offline")
+
+  friends User[] @relation("friends")
+  friendsrelation User[] @relation("friends")
+
+  friendsrequests FriendRequest[]
+}
+
+model History {
+  myid Int 
+  yourid Int
+  result String
+  score String
+  type String
+
+  historypk Int @id @default(autoincrement()) //pk
+  user User @relation(fields: [myid], references: [id])
+}
+
+model FriendRequest {
+  requestpk Int @id @default(autoincrement()) //pk
+  myid Int
+  friendid Int
+  friendname String
+  response String @default("accept or decline")
+  friend User @relation(fields: [myid], references: [id])
+}

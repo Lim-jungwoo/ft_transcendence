@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+  react:
+    image: react
+    build: ./react
+    container_name: react
+    ports:
+      - '3000:3000'
+    volumes:
+      - react:/usr/src/app
+    networks:
+      - transce
+    restart: on-failure
+
+  dev-nestjs:
+    image: nestjs
+    build: ./backend
+    container_name: nestjs
+    ports:
+      - 4000:4000
+    networks:
+      - transce
+    volumes:
+      - nestjs:/app
+    restart: on-failure
+    depends_on:
+      dev-db:
+        condition: service_started
+
+  dev-db:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+    networks:
+      - transce
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    restart: on-failure
+
+networks:
+  transce:
+    driver: bridge
+
+volumes:
+  react:
+  nestjs:
+  postgres:
